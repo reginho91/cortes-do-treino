@@ -1,5 +1,5 @@
 /* Cortes do Treino: deixa o app abrir sem internet e recebe vídeos do "Compartilhar" da galeria */
-const VERSAO = 'cortes-v1';
+const VERSAO = 'cortes-v2';
 const COMPARTILHADOS = 'cortes-compartilhados';
 const BASICOS = [
   './', 'index.html', 'app.css', 'app.js', 'vendor/mp4-muxer.min.js', 'manifest.webmanifest',

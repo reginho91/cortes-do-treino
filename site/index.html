@@ -22,6 +22,7 @@
     <symbol id="i-logo" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#FF7500"/><path d="M19 13.5v21l17-10.5z" fill="#fff"/><rect x="8" y="37" width="32" height="3" rx="1.5" fill="#fff" opacity=".9"/><rect x="8" y="8" width="9" height="3" rx="1.5" fill="#fff" opacity=".9"/><rect x="19.5" y="8" width="9" height="3" rx="1.5" fill="#fff" opacity=".55"/><rect x="31" y="8" width="9" height="3" rx="1.5" fill="#fff" opacity=".55"/></symbol>
     <symbol id="i-video" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 10l5-3v10l-5-3M3 7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
     <symbol id="i-mais" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-menos" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M5 12h14"/></symbol>
     <symbol id="i-cima" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 15l6-6 6 6"/></symbol>
     <symbol id="i-baixo" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></symbol>
     <symbol id="i-girar" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></symbol>
@@ -133,6 +134,11 @@
     <button type="button" class="btn btn-secundario" data-mover="-0.5">◀ 0,5 s</button>
     <span id="tempoAjuste" class="tempo"></span>
     <button type="button" class="btn btn-secundario" data-mover="0.5">0,5 s ▶</button>
+  </div>
+  <div class="controles">
+    <button type="button" class="btn btn-secundario" id="btnMenosTempo" data-tempo="-1" aria-label="Menos tempo: tira meio segundo"><svg><use href="#i-menos"/></svg> Menos tempo</button>
+    <span id="duracaoAjuste" class="tempo tempo-destaque" aria-live="polite"></span>
+    <button type="button" class="btn btn-secundario" id="btnMaisTempo" data-tempo="1" aria-label="Mais tempo: soma meio segundo"><svg><use href="#i-mais"/></svg> Mais tempo</button>
   </div>
   <div class="controles">
     <button type="button" class="btn btn-secundario" data-zoom="-1"><svg><use href="#i-lupa-menos"/></svg> Afastar</button>

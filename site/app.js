@@ -129,7 +129,7 @@ function adicionarArquivos(lista) {
       id: proximoId++, arquivo: f, url: URL.createObjectURL(f),
       rotulo: info.rotulo, data: info.data,
       dur: 0, vw: 0, vh: 0, rot: 0,
-      amostras: null, auto: {}, inicio: 0, inicioManual: false,
+      amostras: null, auto: {}, inicio: 0, inicioManual: false, extra: 0,
       enq: { sequencia: null, telas: null }, cacheEnq: null,
       analise: 'esperando', progresso: 0, mini: null,
     });
@@ -216,7 +216,7 @@ async function analisar(c) {
     fracs[0] = fracs[1];
     c.amostras = { passo, n, notas, fracs, mapas, aw, ah };
     // miniatura no meio do pedaço escolhido
-    const L = janelaAtual();
+    const L = tempoDe(c);
     await irPara(v, inicioDe(c, L) + Math.min(L, c.dur) / 2);
     const mini = document.createElement('canvas');
     const escala = 200 / Math.max(c.vw, c.vh);
@@ -281,7 +281,33 @@ function escolherAutomatico(c, L) {
   return clamp(melhorB, 0, Math.max(0, dur - L - 0.05));
 }
 
-function janelaAtual() { return RITMOS[estado.estilo][estado.ritmo]; }
+// Segundos que cada vídeo fica no Story: o do ritmo, mais o que a pessoa somou ou tirou nele
+// ("Mais tempo" / "Menos tempo"). Guarda só a diferença, então trocar o ritmo continua valendo.
+const TEMPO_PASSO = 0.5, TEMPO_MIN = 1;
+
+function tempoMax(c) { return Math.max(TEMPO_MIN, (c.dur || 0) - 0.05); }
+
+function tempoDe(c, estilo = estado.estilo) {
+  const L = RITMOS[estilo][estado.ritmo] + (c.extra || 0);
+  return Math.round(clamp(L, TEMPO_MIN, tempoMax(c)) * 100) / 100;
+}
+
+// sentido +1 soma, -1 tira; o resultado cai sempre em meio segundo redondo (2,5 · 3,0 · 3,5…)
+function mudarTempo(c, sentido) {
+  const atual = tempoDe(c);
+  const passos = atual / TEMPO_PASSO;
+  const alvo = sentido > 0 ? (Math.floor(passos + 1e-6) + 1) * TEMPO_PASSO : (Math.ceil(passos - 1e-6) - 1) * TEMPO_PASSO;
+  const novo = clamp(alvo, TEMPO_MIN, tempoMax(c));
+  if (Math.abs(novo - atual) < 0.01) return false;
+  // o pedaço cresce ou encolhe a partir de onde já começa (não pula para outro lugar)
+  c.inicio = inicioDe(c, atual);
+  c.inicioManual = true;
+  c.extra = Math.round((novo - RITMOS[estado.estilo][estado.ritmo]) * 100) / 100;
+  c.inicio = clamp(c.inicio, 0, Math.max(0, c.dur - novo - 0.05));
+  return true;
+}
+
+function fmtTempo(s) { return `${s.toFixed(1).replace('.', ',')} s`; }
 
 function inicioDe(c, L) {
   if (!c.amostras) return 0;
@@ -293,7 +319,7 @@ function inicioDe(c, L) {
 }
 
 function definirInicio(c, t) {
-  const L = janelaAtual();
+  const L = tempoDe(c);
   c.inicio = clamp(t, 0, Math.max(0, c.dur - L - 0.05));
   c.inicioManual = true;
 }
@@ -376,7 +402,7 @@ function enquadreDe(c, estilo) {
 }
 
 function enquadreAuto(c, estilo) {
-  const L = RITMOS[estilo][estado.ritmo];
+  const L = tempoDe(c, estilo);
   const ini = inicioDe(c, L);
   const chave = `${estilo}|${L}|${ini.toFixed(2)}|${c.rot}`;
   if (c.cacheEnq && c.cacheEnq.chave === chave) return c.cacheEnq.val;
@@ -454,7 +480,7 @@ function renderLista() {
         <canvas width="128" height="228"></canvas><span class="clipe-num">${i + 1}</span>
       </button>
       <div class="clipe-corpo">
-        <div class="clipe-titulo"><span>${esc(c.rotulo)}</span><span>${c.dur ? fmtDur(c.dur) : ''}</span></div>
+        <div class="clipe-titulo"><span>${esc(c.rotulo)}${pronto && c.extra ? ` <em class="clipe-tempo">${fmtTempo(tempoDe(c))}</em>` : ''}</span><span>${c.dur ? fmtDur(c.dur) : ''}</span></div>
         ${pronto
           ? '<canvas class="linha-movimento" role="img" aria-label="Movimento ao longo do vídeo; o pedaço laranja entra no Story. Toque para mudar."></canvas>'
           : `<div class="clipe-estado">${esc(textoEstado(c))}</div>`}
@@ -505,7 +531,7 @@ function desenharLinha(cv, c) {
   ctx.clearRect(0, 0, w, h);
   if (!c.amostras) return;
   const { n, notas, passo } = c.amostras;
-  const L = janelaAtual();
+  const L = tempoDe(c);
   const ini = inicioDe(c, L);
   const fim = Math.min(c.dur, ini + L);
   let max = 0;
@@ -532,7 +558,8 @@ function tempoNaLinha(cv, c, clientX) {
 }
 
 function atualizarResumo() {
-  const prontos = estado.clipes.filter(c => c.analise === 'pronto').length;
+  const listaProntos = estado.clipes.filter(c => c.analise === 'pronto');
+  const prontos = listaProntos.length;
   const pendentes = estado.clipes.filter(c => c.analise === 'esperando' || c.analise === 'analisando').length;
   const el = $('#resumoMontagem');
   const btn = $('#btnGerar');
@@ -548,7 +575,7 @@ function atualizarResumo() {
     el.classList.add('alerta');
     ok = false;
   } else {
-    const d = duracaoTotal(prontos);
+    const d = duracaoTotal(listaProntos);
     el.textContent = `${prontos} ${prontos === 1 ? 'vídeo' : 'vídeos'} · Story de ${Math.round(d)} s`
       + (d > 60 ? ' (o Instagram divide em partes de 60 s)' : '');
     if (d > 60) el.classList.add('alerta');
@@ -556,10 +583,11 @@ function atualizarResumo() {
   btn.disabled = !ok;
 }
 
-function duracaoTotal(n) {
-  if (estado.estilo === 'telas') return Math.ceil(n / 3) * RITMOS.telas[estado.ritmo];
-  const L = RITMOS.sequencia[estado.ritmo];
-  return n * L - (n - 1) * (n > 1 ? TRANSICAO : 0);
+function duracaoTotal(clipes) {
+  if (!clipes.length) return 0;
+  if (estado.estilo === 'telas') return faixasTelas(clipes).total;
+  const soma = clipes.reduce((s, c) => s + tempoDe(c, 'sequencia'), 0);
+  return soma - (clipes.length - 1) * TRANSICAO;
 }
 
 // ---------- Plano do vídeo final ----------
@@ -569,33 +597,50 @@ function montarPlano() {
 }
 
 function planoSequencia(clipes) {
-  const L = RITMOS.sequencia[estado.ritmo];
   const X = clipes.length > 1 ? TRANSICAO : 0;
-  const segs = clipes.map((c, k) => ({
-    c, t0: k * (L - X), t1: k * (L - X) + L,
-    src: inicioDe(c, L),
-    r: retangulo(c, enquadreDe(c, 'sequencia'), 'sequencia'),
-    alvo: [0, 0, LARG, ALT],
-    suave: k > 0 ? X : 0,
-  }));
-  return { total: clipes.length * L - (clipes.length - 1) * X, segs, fundo: '#000' };
+  let t = 0;
+  const segs = clipes.map((c, k) => {
+    const L = tempoDe(c, 'sequencia');
+    const s = {
+      c, t0: t, t1: t + L,
+      src: inicioDe(c, L),
+      r: retangulo(c, enquadreDe(c, 'sequencia'), 'sequencia'),
+      alvo: [0, 0, LARG, ALT],
+      suave: k > 0 ? X : 0,
+    };
+    t += L - X;
+    return s;
+  });
+  return { total: segs.length ? segs[segs.length - 1].t1 : 0, segs, fundo: '#000' };
+}
+
+// 3 telas: os vídeos se revezam nas faixas (1º em cima, 2º no meio, 3º embaixo, 4º em cima…).
+// Cada faixa soma o tempo dos seus vídeos; o Story dura o da faixa mais longa,
+// e as outras esticam um pouco para acabar junto.
+function faixasTelas(clipes) {
+  const faixas = [[], [], []];
+  clipes.forEach((c, i) => faixas[i % 3].push(c));
+  const somas = faixas.map(f => f.reduce((s, c) => s + tempoDe(c, 'telas'), 0));
+  return { faixas, somas, total: Math.max(...somas) };
 }
 
 function planoTelas(clipes) {
-  const D = RITMOS.telas[estado.ritmo];
-  const faixas = [[], [], []];
-  clipes.forEach((c, i) => faixas[i % 3].push(c));
-  const total = Math.max(...faixas.map(f => f.length)) * D;
+  const { faixas, somas, total } = faixasTelas(clipes);
   const segs = [];
   faixas.forEach((f, b) => {
+    const estica = somas[b] ? total / somas[b] : 1;
     const pontos = [0];
-    for (let j = 1; j < f.length; j++) pontos.push(Math.min(total - 0.5, total * j / f.length + b * CASCATA));
+    let acum = 0;
+    for (let j = 1; j < f.length; j++) {
+      acum += tempoDe(f[j - 1], 'telas');
+      pontos.push(clamp(acum * estica + b * CASCATA, pontos[j - 1] + 0.5, total - 0.5));
+    }
     pontos.push(total);
     f.forEach((c, j) => {
       const len = pontos[j + 1] - pontos[j];
       segs.push({
         c, t0: pontos[j], t1: pontos[j + 1],
-        src: clamp(inicioDe(c, D), 0, Math.max(0, c.dur - len - 0.05)),
+        src: clamp(inicioDe(c, tempoDe(c, 'telas')), 0, Math.max(0, c.dur - len - 0.05)),
         r: retangulo(c, enquadreDe(c, 'telas'), 'telas'),
         alvo: [0, b * (FAIXA_ALT + FAIXA_VAO), LARG, FAIXA_ALT],
         suave: 0,
@@ -873,16 +918,17 @@ async function abrirAjuste(c) {
   ctx.fillRect(0, 0, cv.width, cv.height);
   const linha = $('#linhaAjuste');
   requestAnimationFrame(() => desenharLinha(linha, c));
+  atualizarTempoAjuste(c);
   const v = criarVideo(c.url);
   aj.v = v;
   await metadados(v);
   if (aj.c !== c) return;
-  await irPara(v, inicioDe(c, janelaAtual()));
+  await irPara(v, inicioDe(c, tempoDe(c)));
   if (aj.c !== c) return;
   v.play().catch(() => {});
   const passo = () => {
     if (aj.c !== c) return;
-    const L = janelaAtual();
+    const L = tempoDe(c);
     const ini = inicioDe(c, L);
     if (!v.seeking && (v.ended || v.currentTime > ini + Math.min(L, c.dur) || v.currentTime < ini - 0.4)) {
       v.currentTime = ini;
@@ -897,6 +943,14 @@ async function abrirAjuste(c) {
     aj.raf = requestAnimationFrame(passo);
   };
   aj.raf = requestAnimationFrame(passo);
+}
+
+// Mostra quantos segundos o vídeo fica no Story e trava o botão que passou do limite
+function atualizarTempoAjuste(c) {
+  const L = tempoDe(c);
+  $('#duracaoAjuste').textContent = fmtTempo(L);
+  $('#btnMenosTempo').disabled = L <= TEMPO_MIN + 0.01;
+  $('#btnMaisTempo').disabled = L >= tempoMax(c) - 0.01;
 }
 
 function fecharAjuste() {
@@ -944,7 +998,7 @@ function ligarAjuste() {
   const moverLinha = ev => {
     const c = aj.c;
     if (!c) return;
-    definirInicio(c, tempoNaLinha(linha, c, ev.clientX) - janelaAtual() / 2);
+    definirInicio(c, tempoNaLinha(linha, c, ev.clientX) - tempoDe(c) / 2);
     desenharLinha(linha, c);
   };
   linha.addEventListener('pointerdown', ev => { if (!aj.c) return; linha.setPointerCapture(ev.pointerId); aj.arrastoLinha = true; moverLinha(ev); });
@@ -959,8 +1013,14 @@ function ligarAjuste() {
     const b = ev.target.closest('button');
     if (!b) return;
     if (b.dataset.mover) {
-      definirInicio(c, inicioDe(c, janelaAtual()) + Number(b.dataset.mover));
+      definirInicio(c, inicioDe(c, tempoDe(c)) + Number(b.dataset.mover));
       desenharLinha(linha, c);
+    } else if (b.dataset.tempo) {
+      if (mudarTempo(c, Number(b.dataset.tempo))) {
+        desenharLinha(linha, c);
+        atualizarTempoAjuste(c);
+        if (aj.v && !aj.v.seeking) aj.v.currentTime = inicioDe(c, tempoDe(c));
+      }
     } else if (b.dataset.zoom) {
       const { estilo, enq } = enquadreEditavel(c);
       enq.z = clamp(enq.z * (Number(b.dataset.zoom) > 0 ? 0.85 : 1 / 0.85), ZOOM_MIN, 1);
@@ -1055,7 +1115,7 @@ function ligar() {
     if (!c) return;
     const linha = ev.target.closest('canvas.linha-movimento');
     if (linha) {
-      definirInicio(c, tempoNaLinha(linha, c, ev.clientX) - janelaAtual() / 2);
+      definirInicio(c, tempoNaLinha(linha, c, ev.clientX) - tempoDe(c) / 2);
       desenharLinha(linha, c);
       return;
     }

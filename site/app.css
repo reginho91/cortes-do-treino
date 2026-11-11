@@ -190,14 +190,18 @@ b, strong { font-weight: 650; }
 .modal-topo strong { font-size: 17px; }
 .area-previa { display: grid; place-items: center; }
 .area-previa canvas {
-  display: block; max-width: 100%; max-height: 46dvh;
+  display: block; max-width: 100%; max-height: 42dvh;
   border-radius: 14px; background: #000; touch-action: none; cursor: grab;
 }
 .area-previa canvas.faixa { width: 100%; height: auto; }
-.area-previa canvas.retrato { height: 46dvh; width: auto; }
+.area-previa canvas.retrato { height: 42dvh; width: auto; }
 .controles { display: flex; gap: 8px; align-items: center; justify-content: center; }
 .controles .btn { flex: 1; min-height: 44px; padding: 8px 10px; font-size: 14px; }
 .controles .tempo { flex: 1.2; text-align: center; font-variant-numeric: tabular-nums; color: var(--text-dim); font-size: 14px; }
+.controles .tempo-destaque { flex: 0 0 56px; color: var(--accent); font-weight: 700; font-size: 17px; }
+.controles .btn { white-space: nowrap; }
+.controles .btn:disabled { opacity: .4; cursor: default; }
+.clipe-tempo { font-style: normal; color: var(--accent); font-weight: 600; font-size: 13px; margin-left: 4px; }
 
 /* Aviso rápido */
 .aviso {
