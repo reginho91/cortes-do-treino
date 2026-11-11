@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cortes do Treino</title>
+<meta name="description" content="Junte os vídeos do treino num Story em segundos. Tudo no celular, sem enviar os vídeos para lugar nenhum.">
+<meta name="theme-color" content="#0d0f12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cortes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icones/icone-192.png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#FF7500"/><path d="M19 13.5v21l17-10.5z" fill="#fff"/><rect x="8" y="37" width="32" height="3" rx="1.5" fill="#fff" opacity=".9"/><rect x="8" y="8" width="9" height="3" rx="1.5" fill="#fff" opacity=".9"/><rect x="19.5" y="8" width="9" height="3" rx="1.5" fill="#fff" opacity=".55"/><rect x="31" y="8" width="9" height="3" rx="1.5" fill="#fff" opacity=".55"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 10l5-3v10l-5-3M3 7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-mais" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-cima" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 15l6-6 6 6"/></symbol>
+    <symbol id="i-baixo" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-girar" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></symbol>
+    <symbol id="i-ajustar" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-lixo" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-enviar" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></symbol>
+    <symbol id="i-baixar" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+    <symbol id="i-fechar" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-varinha" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 20L15 9M17 3v3M15.5 4.5h3M20 8v2M19 9h2M12 4v1.5M11.25 4.75h1.5"/></symbol>
+    <symbol id="i-lupa-mais" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 16l4.5 4.5M8 11h6M11 8v6"/></symbol>
+    <symbol id="i-lupa-menos" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 16l4.5 4.5M8 11h6"/></symbol>
+    <symbol id="i-sequencia" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="4" width="7" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"/></symbol>
+    <symbol id="i-telas" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="5.2" rx="1.2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="6" y="9.4" width="12" height="5.2" rx="1.2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="6" y="16.3" width="12" height="5.2" rx="1.2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  </defs>
+</svg>
+
+<header class="topo">
+  <div class="marca"><svg class="marca-logo"><use href="#i-logo"/></svg><span>Cortes do Treino</span></div>
+  <button id="btnInstalar" class="btn btn-fantasma btn-pequeno" hidden>Instalar app</button>
+</header>
+
+<main class="conteudo">
+
+  <!-- 1. Escolher os vídeos -->
+  <section id="telaInicio" class="tela">
+    <div id="zonaSoltar" class="zona">
+      <svg class="zona-icone"><use href="#i-video"/></svg>
+      <h1>Seu treino vira Story<br>em segundos</h1>
+      <p>Escolha os vídeos do treino. O app acha sozinho o pedaço em que você está se exercitando e monta o vídeo.</p>
+      <label class="btn btn-primario btn-grande">
+        <input type="file" id="entradaArquivos" accept="video/*" multiple hidden>
+        <svg><use href="#i-mais"/></svg> Escolher vídeos
+      </label>
+      <p class="dica so-pc">ou arraste os vídeos para esta área</p>
+    </div>
+
+    <details class="como-usar">
+      <summary>Como usar</summary>
+      <ol>
+        <li>Toque em <b>Escolher vídeos</b> e marque os vídeos do treino.</li>
+        <li>O app marca em laranja o pedaço que vai entrar. Para trocar, toque em outro ponto da barrinha. Em <b>Ajustar</b> dá para girar e enquadrar.</li>
+        <li>Escolha <b>Sequência</b> (um exercício depois do outro) ou <b>3 telas</b> (três ao mesmo tempo).</li>
+        <li>Toque em <b>Gerar vídeo</b> e depois em <b>Mandar para o Instagram</b>. A música você coloca no próprio Instagram.</li>
+      </ol>
+      <p class="dica">Os vídeos não saem do seu celular: o corte é feito aqui mesmo.</p>
+      <p class="dica" id="dicaInstalar">No celular, toque nos três pontinhos do Chrome e em <b>Adicionar à tela inicial</b>. Depois de instalado, dá para mandar direto da galeria: <b>Compartilhar → Cortes</b>.</p>
+    </details>
+  </section>
+
+  <!-- 2. Montar -->
+  <section id="telaMontar" class="tela" hidden>
+    <div class="escolhas">
+      <div class="segmentado" id="escolhaEstilo" role="radiogroup" aria-label="Estilo do vídeo">
+        <button type="button" role="radio" data-estilo="sequencia" aria-checked="true"><svg><use href="#i-sequencia"/></svg> Sequência</button>
+        <button type="button" role="radio" data-estilo="telas" aria-checked="false"><svg><use href="#i-telas"/></svg> 3 telas</button>
+      </div>
+      <div class="segmentado segmentado-pequeno" id="escolhaRitmo" role="radiogroup" aria-label="Ritmo">
+        <button type="button" role="radio" data-ritmo="rapido" aria-checked="false">Rápido</button>
+        <button type="button" role="radio" data-ritmo="normal" aria-checked="true">Normal</button>
+        <button type="button" role="radio" data-ritmo="calmo" aria-checked="false">Calmo</button>
+      </div>
+    </div>
+
+    <ol id="listaClipes" class="lista-clipes"></ol>
+
+    <label class="btn btn-secundario btn-largo">
+      <input type="file" id="entradaMais" accept="video/*" multiple hidden>
+      <svg><use href="#i-mais"/></svg> Adicionar mais vídeos
+    </label>
+
+    <div class="barra-gerar">
+      <p id="resumoMontagem" class="resumo"></p>
+      <button id="btnGerar" class="btn btn-primario btn-grande" type="button">Gerar vídeo</button>
+    </div>
+  </section>
+
+  <!-- 3. Gerando -->
+  <section id="telaGerando" class="tela tela-centro" hidden>
+    <div class="moldura-916"><canvas id="telaRender" width="1080" height="1920"></canvas></div>
+    <div class="progresso" aria-hidden="true"><div id="barraProgresso"></div></div>
+    <p id="textoProgresso" class="texto-progresso" aria-live="polite">Preparando…</p>
+    <p class="dica">Deixe a tela aberta até terminar.</p>
+    <button id="btnCancelar" class="btn btn-fantasma" type="button">Cancelar</button>
+  </section>
+
+  <!-- 4. Pronto -->
+  <section id="telaPronto" class="tela tela-centro" hidden>
+    <div class="moldura-916"><video id="videoPronto" playsinline muted loop autoplay></video></div>
+    <p id="infoPronto" class="dica"></p>
+    <button id="btnCompartilhar" class="btn btn-primario btn-grande btn-largo" type="button"><svg><use href="#i-enviar"/></svg> Mandar para o Instagram</button>
+    <a id="btnSalvar" class="btn btn-secundario btn-grande btn-largo" download="treino.mp4"><svg><use href="#i-baixar"/></svg> Salvar no aparelho</a>
+    <div class="linha-botoes">
+      <button id="btnVoltarAjustar" class="btn btn-fantasma" type="button">Voltar e ajustar</button>
+      <button id="btnNovo" class="btn btn-fantasma" type="button">Fazer outro</button>
+    </div>
+  </section>
+</main>
+
+<!-- Ajuste de um vídeo -->
+<dialog id="modalAjuste" class="modal" aria-labelledby="tituloAjuste">
+  <div class="modal-topo">
+    <strong id="tituloAjuste">Ajustar</strong>
+    <button id="btnFecharAjuste" class="btn-icone" type="button" aria-label="Fechar"><svg><use href="#i-fechar"/></svg></button>
+  </div>
+  <div class="area-previa"><canvas id="canvasPrevia" width="540" height="960"></canvas></div>
+  <p class="dica centro" id="dicaArrastar">Arraste a imagem para enquadrar</p>
+  <canvas id="linhaAjuste" class="linha-movimento linha-grande"></canvas>
+  <div class="controles">
+    <button type="button" class="btn btn-secundario" data-mover="-0.5">◀ 0,5 s</button>
+    <span id="tempoAjuste" class="tempo"></span>
+    <button type="button" class="btn btn-secundario" data-mover="0.5">0,5 s ▶</button>
+  </div>
+  <div class="controles">
+    <button type="button" class="btn btn-secundario" data-zoom="-1"><svg><use href="#i-lupa-menos"/></svg> Afastar</button>
+    <button type="button" class="btn btn-secundario" data-zoom="1"><svg><use href="#i-lupa-mais"/></svg> Aproximar</button>
+  </div>
+  <div class="controles">
+    <button type="button" class="btn btn-secundario" id="btnGirar"><svg><use href="#i-girar"/></svg> Girar</button>
+    <button type="button" class="btn btn-secundario" id="btnAutomatico"><svg><use href="#i-varinha"/></svg> Automático</button>
+  </div>
+  <button type="button" class="btn btn-primario btn-grande btn-largo" id="btnOkAjuste">Pronto</button>
+</dialog>
+
+<div id="aviso" class="aviso" role="status" hidden></div>
+<div id="deposito" aria-hidden="true"></div>
+
+<script src="vendor/mp4-muxer.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
